@@ -21,7 +21,7 @@ Addons can currently specify commands to extend the CLI interface via the `inclu
 
 This lookup process would be refactored to use the DAG structure of loaded addons to build a flattened list of addons that implement the requested command. This stack would then be recursively invoked, such that each addon's version of the command can call `this._super()` to pass control to the next addon in the "stack". The bottom of the stack would be the built-in implementation (if one exists).
 
-This structure mimics Connect-style middleware, where each function in the stack can decide to pass control further, or halt the recursion by not calling `this._super()`.
+This structure is analagous to Connect-style middleware, where each function in the stack can decide to pass control further, or halt the recursion by not calling `this._super()`.
 
 Here's a rough sketch in code:
 
@@ -44,6 +44,8 @@ invokeNextCommandInStack()
 ```
 
 > **Note:** obviously, there's a lot more that should happen, and the commands are not functions themselves. Likely, either the Command model would need to incorporate the idea of a "stack", the `/lib/cli/cli.js` file would have to become stack-aware, or we introduce a new CommandStack abstraction to handle this.
+
+We would also add a `-v/--verbose` flag which would print out information about what extensions are running. Output could show what addon in the "stack" is currently executing, which would make it easier to track down what code could be introducing a bug.
 
 # Drawbacks
 
